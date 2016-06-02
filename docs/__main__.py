@@ -180,7 +180,7 @@ def get_markdown_menu(urls_filter):
         doc = _get_doc(cls)
         url = '%s.md' % url.replace('{', '__').replace('}', '__')
         url = os.path.join('docs', 'md', *url.split('/'))
-        text += '\n* [/%s](%s)' % (doc, url)
+        text += '\n* [%s](/%s)' % (doc, url)
 
     return text
 
