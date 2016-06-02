@@ -179,7 +179,8 @@ def get_markdown_menu(urls_filter):
     text = '# Menu'
     for url in urls_filter:
         __, url, cls = url
-        methods = set(filter(lambda x: hasattr(cls, x.lower()), METH_ALL))
+        methods = list(filter(lambda x: hasattr(cls, x.lower()), METH_ALL))
+        methods.sort()
         doc = _get_doc(cls)
         url = '%s.md' % url.replace('{', '__').replace('}', '__')
         url = os.path.join('docs', 'md', *url.split('/'))
@@ -202,7 +203,8 @@ if __name__ == '__main__':
 
     for url in urls_filter:
         __, url, cls = url
-        methods = set(filter(lambda x: hasattr(cls, x.lower()), METH_ALL))
+        methods = list(filter(lambda x: hasattr(cls, x.lower()), METH_ALL))
+        methods.sort()
         errors, success = get_method_data(cls, methods)
         filename = create_folder_get_filename(url)
         doc = _get_doc(cls)
