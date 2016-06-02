@@ -2,6 +2,7 @@ import ast
 import inspect
 import json
 import os
+from collections import OrderedDict
 
 import astor
 from aiohttp.hdrs import METH_ALL
@@ -23,10 +24,10 @@ class RecTree:
         if type(n) is ast.Str:
             message = n.s
 
-        error = {
+        error = OrderedDict({
             'status': status.n,
             'message': message
-        }
+        })
 
         if any(help_):
             help_text = astor.to_source(help_[0].value)
@@ -73,7 +74,7 @@ class RecTree:
 
 def get_errors_meta(cls, method):
     meta = dict(filter(lambda x: issubclass(x[1].__class__, Field), getattr(cls, 'Meta').__dict__.items()))
-    errors = {}
+    errors = OrderedDict()
     for key, object_ in meta.items():
         if method.upper() not in object_.methods:
             continue
@@ -98,22 +99,23 @@ def get_success_method(method):
     except TypeError:
         json_doc = None
 
-    success = {
+    success = OrderedDict({
         'status': RecTree().method(tree).status,
         'example': json.dumps(json_doc, sort_keys=True, indent=(4 * ' '))
     }
+    )
 
     return success
 
 
 def get_method_data(cls, methods):
-    errors = {}
-    success = {}
+    errors = OrderedDict()
+    success = OrderedDict()
     for method in methods:
-        error = {
+        error = OrderedDict({
             'fields': get_errors_meta(cls, method),
             'method': get_errors_method(getattr(cls, method.lower()))
-        }
+        })
         errors[method] = error
         success[method] = get_success_method(getattr(cls, method.lower()))
 
