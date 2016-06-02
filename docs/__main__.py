@@ -78,7 +78,7 @@ def get_errors_meta(cls, method):
     )
     meta.sort()
     meta = OrderedDict(meta)
-    print(meta)
+
     errors = OrderedDict()
     for key, object_ in meta.items():
         if method.upper() not in object_.methods:
