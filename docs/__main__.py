@@ -73,9 +73,12 @@ class RecTree:
 
 
 def get_errors_meta(cls, method):
-    meta = OrderedDict(
-        filter(lambda x: issubclass(x[1].__class__, Field), OrderedDict(getattr(cls, 'Meta').__dict__).items())
+    meta = list(
+        filter(lambda x: issubclass(x[1].__class__, Field), getattr(cls, 'Meta').__dict__.items())
     )
+    meta.sort()
+    meta = OrderedDict(meta)
+    print(meta)
     errors = OrderedDict()
     for key, object_ in meta.items():
         if method.upper() not in object_.methods:
