@@ -183,7 +183,7 @@ def get_markdown_menu(urls_filter):
         url = os.path.join('docs', 'md', *url.split('/'))
         text += '\n* [%s](/%s)' % (doc, url)
         for method in methods:
-            text += '\n    * [%s](/%s#%s)' % (method, url, method)
+            text += '\n    * [%s](/%s#%s)' % (method, url, method.lower())
 
     return text
 
