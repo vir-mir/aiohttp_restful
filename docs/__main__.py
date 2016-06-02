@@ -135,7 +135,7 @@ def create_folder_get_filename(url):
 def get_markdown(errors, success, url, methods, doc):
     text = "# %s" % doc
 
-    text += "\n* [main](docs/main.md)\n* [menu methods](docs/menu.md)"
+    text += "\n* [main](/docs/main.md)\n* [menu methods](/docs/menu.md)\n"
 
     for method in methods:
         text += "\n## %s" % method
@@ -180,7 +180,7 @@ def get_markdown_menu(urls_filter):
         doc = _get_doc(cls)
         url = '%s.md' % url.replace('{', '__').replace('}', '__')
         url = os.path.join('docs', 'md', *url.split('/'))
-        text += '\n* [%s](%s)' % (doc, url)
+        text += '\n* [/%s](%s)' % (doc, url)
 
     return text
 
