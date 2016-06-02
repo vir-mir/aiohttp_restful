@@ -128,7 +128,7 @@ def create_folder_get_filename(url):
     if not os.path.isdir(folder):
         os.makedirs(folder)
 
-    file_name = os.path.join(folder, '%s.md' % file_name.replace('{', '__').replace('}', '__'))
+    file_name = os.path.join('docs', folder, '%s.md' % file_name.replace('{', '__').replace('}', '__'))
     return file_name
 
 
@@ -177,10 +177,13 @@ def get_markdown_menu(urls_filter):
     text = '# Menu'
     for url in urls_filter:
         __, url, cls = url
+        methods = set(filter(lambda x: hasattr(cls, x.lower()), METH_ALL))
         doc = _get_doc(cls)
         url = '%s.md' % url.replace('{', '__').replace('}', '__')
         url = os.path.join('docs', 'md', *url.split('/'))
         text += '\n* [%s](/%s)' % (doc, url)
+        for method in methods:
+            text += '\n    * [%s](/%s#%s)' % (method, url, method)
 
     return text
 
