@@ -184,7 +184,9 @@ def get_markdown(errors, success, doc_fields, url, methods, doc):
             default = 'None' if field['default'] == 'NoneType' else field['default']
             del field['verbose_name'], field['type_value'], field['required'], field['default']
 
-            settings = json.dumps(field, sort_keys=True) if field else ''
+            settings = ''
+            for key, val in field.items():
+                settings += '%s: %s, ' % (key, val)
 
             text += '\n%s | %s | %s | %s | %s | %s' % (
                 field_name,
