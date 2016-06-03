@@ -193,7 +193,7 @@ def get_markdown(errors, success, doc_fields, url, methods, doc):
                 verbose_name,
                 type_value,
                 required,
-                settings.strip(','),
+                settings.strip().strip(','),
                 default
             )
 
