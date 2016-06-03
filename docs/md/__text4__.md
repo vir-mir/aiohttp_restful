@@ -9,11 +9,7 @@ GET /{text4}
 ### fields
 field name | verbose name | type value | required | settings | default
 ---------- | ------------ | ---------- | -------- | -------- | -------
-text | None | integer | False | ```json {
-    "eq": false,
-    "larger": 1,
-    "less": 56
-}``` | None
+text | None | integer | False | ```json {"eq": false, "larger": 1, "less": 56}``` | None
 text4 | id_name | integer | True |  | None
 ### success
 #### example
