@@ -1,3 +1,3 @@
 # Menu
-* [Test](/docs/md/__text4__.md)
-    * [GET](/docs/md/__text4__.md#get)
+* [Test](/docs/md/.md)
+    * [GET](/docs/md/.md#get)

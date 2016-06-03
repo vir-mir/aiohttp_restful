@@ -9,6 +9,8 @@ DATE_BASE = {
     'database': 'new_stromyc',
 }
 
+TOKENS_PARTNERS = {}
+
 VERSION = 'application/request.v1+json'
 
 try:
