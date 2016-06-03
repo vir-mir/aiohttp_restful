@@ -2,6 +2,7 @@ import ast
 import inspect
 import json
 import os
+import shutil
 from collections import OrderedDict
 
 import astor
@@ -252,6 +253,11 @@ def read(filename, text):
 if __name__ == '__main__':
     urls_filter = list(filter(lambda x: issubclass(x[2], View), urls))
     menu_filename = os.path.join(os.path.dirname(__file__), 'menu.md')
+    folder = os.path.join(os.path.dirname(__file__), 'md')
+
+    if os.path.isdir(folder):
+        shutil.rmtree(folder)
+
     read(menu_filename, get_markdown_menu(urls_filter))
 
     for url in urls_filter:
