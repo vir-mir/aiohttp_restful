@@ -7,6 +7,8 @@ __all__ = ['FieldString', 'FieldJson', 'FieldEnum']
 
 
 class FieldString(Field):
+    type_value = 'string'
+
     def set_value(self, value):
         self.value = str(value)
 

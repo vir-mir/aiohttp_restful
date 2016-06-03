@@ -5,6 +5,8 @@ __all__ = ['FieldInteger', 'FieldCompare', 'FieldLarger', 'FieldLess', 'FieldLis
 
 
 class FieldInteger(Field):
+    type_value = 'integer'
+
     def set_value(self, value):
         try:
             self.value = int(value)
@@ -13,6 +15,8 @@ class FieldInteger(Field):
 
 
 class FieldFloat(Field):
+    type_value = 'float'
+
     def set_value(self, value):
         try:
             self.value = float(value)

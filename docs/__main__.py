@@ -72,13 +72,16 @@ class RecTree:
         return self
 
 
-def get_errors_meta(cls, method):
+def get_meta(cls):
     meta = list(
         filter(lambda x: issubclass(x[1].__class__, Field), getattr(cls, 'Meta').__dict__.items())
     )
     meta.sort()
-    meta = OrderedDict(meta)
+    return OrderedDict(meta)
 
+
+def get_errors_meta(cls, method):
+    meta = get_meta(cls)
     errors = OrderedDict()
     for key, object_ in meta.items():
         if method.upper() not in object_.methods:
@@ -113,9 +116,28 @@ def get_success_method(method):
     return success
 
 
+def get_field_docs(cls, method):
+    meta = get_meta(cls)
+    data = OrderedDict()
+    exclude_field = {'methods', 'name', 'default', 'value'}
+
+    for field_name, field in meta.items():
+        if method.upper() not in field.methods:
+            continue
+
+        all_property = list(filter(lambda x: x[0] not in exclude_field, field.__dict__.items()))
+        all_property.sort()
+        data[field_name] = OrderedDict(all_property)
+        data[field_name]['type_value'] = field.type_value
+        data[field_name]['default'] = type(field.default).__name__
+
+    return data
+
+
 def get_method_data(cls, methods):
     errors = OrderedDict()
     success = OrderedDict()
+    doc_fields = OrderedDict()
     for method in methods:
         error = OrderedDict({
             'fields': get_errors_meta(cls, method),
@@ -123,8 +145,9 @@ def get_method_data(cls, methods):
         })
         errors[method] = error
         success[method] = get_success_method(getattr(cls, method.lower()))
+        doc_fields[method] = get_field_docs(cls, method)
 
-    return errors, success
+    return errors, success, doc_fields
 
 
 def create_folder_get_filename(url):
@@ -139,7 +162,7 @@ def create_folder_get_filename(url):
     return file_name
 
 
-def get_markdown(errors, success, url, methods, doc):
+def get_markdown(errors, success, doc_fields, url, methods, doc):
     text = "# %s" % doc
 
     text += "\n* [main](/docs/main.md)\n* [menu methods](/docs/menu.md)\n"
@@ -149,6 +172,29 @@ def get_markdown(errors, success, url, methods, doc):
         text += "\n```\n%s %s\n```" % (method, url)
         m_success = success[method]
         m_errors = errors[method]
+        m_doc_fields = doc_fields[method]
+
+        text += '\n### fields'
+        text += '\nfield name | verbose name | type value | required | settings | default'
+        text += '\n---------- | ------------ | ---------- | -------- | -------- | -------'
+        for field_name, field in m_doc_fields.items():
+            verbose_name = field['verbose_name']
+            type_value = field['type_value']
+            required = field['required']
+            default = 'None' if field['default'] == 'NoneType' else field['default']
+            del field['verbose_name'], field['type_value'], field['required'], field['default']
+
+            settings = '```json %s```' % json.dumps(field, sort_keys=True, indent=(4 * ' ')) if field else ''
+
+            text += '\n%s | %s | %s | %s | %s | %s' % (
+                field_name,
+                verbose_name,
+                type_value,
+                required,
+                settings,
+                default
+            )
+
         text += '\n### success'
         text += '\n#### example\n```json\nhead status: %s\n%s\n```' % (m_success['status'], m_success['example'])
         text += '\n### errors\n#### fields'
@@ -210,8 +256,8 @@ if __name__ == '__main__':
         __, url, cls = url
         methods = list(filter(lambda x: hasattr(cls, x.lower()), METH_ALL))
         methods.sort()
-        errors, success = get_method_data(cls, methods)
+        errors, success, doc_fields = get_method_data(cls, methods)
         filename = create_folder_get_filename(url)
         doc = _get_doc(cls)
 
-        read(filename, get_markdown(errors, success, url, methods, doc))
+        read(filename, get_markdown(errors, success, doc_fields, url, methods, doc))

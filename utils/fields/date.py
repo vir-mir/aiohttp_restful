@@ -8,6 +8,8 @@ __all__ = ['FieldDateTime', 'FieldDate', 'FieldTimeStamp']
 
 
 class FieldDateTime(Field):
+    type_value = 'string'
+
     def __init__(self, format_='%Y-%m-%d %H:%M:%I', **kwargs):
         self.format = format_
         super(FieldDateTime, self).__init__(**kwargs)

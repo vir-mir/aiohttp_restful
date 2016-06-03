@@ -6,6 +6,8 @@ __all__ = ['Field']
 
 
 class Field(ABC):
+    type_value = ''
+
     def __init__(self, *, verbose_name=None, default=None, required=True, methods=None):
         self.value = None
         self.methods = methods or METH_ALL
